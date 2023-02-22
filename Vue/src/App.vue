@@ -5,12 +5,14 @@ import TheWelcome from './components/TheWelcome.vue'
 
 <template>
   <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
+    <img alt="Vue logo" class="text-red-600" src="./assets/logo.svg" width="125" height="125" />
 
-    <div class="wrapper">
+    <div class="text-red-600">
       <HelloWorld msg="You did it!" />
     </div>
   </header>
+
+  <div class="text-red-600">lsososososos</div>
 
   <main>
     <TheWelcome />

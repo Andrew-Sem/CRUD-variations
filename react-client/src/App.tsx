@@ -1,22 +1,29 @@
-import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { TodoType } from './types/Todo';
 import { TodoList } from './components/todo-list';
+import { Header } from './components/header';
+import { useEffect, useState } from 'react';
 
 function App() {
 	const [todos, setTodos] = useState<TodoType[]>([]);
+
 	useEffect(() => {
-		const getData = async () => {
-			const response = await axios.get<TodoType[]>('http://localhost:8080/todos');
-			setTodos(response.data);
+		const getTodos = async () => {
+			const res = await axios.get<TodoType[]>('http://localhost:8080/todos');
+			setTodos(res.data);
 		};
-		getData();
+		getTodos();
 	}, []);
+
 	return (
-		<div
-			className={'flex flex-col items-center justify-center space-y-4 min-h-screen container'}
-		>
-			{todos.length !== 0 && <TodoList todos={todos} />}
+		<div className='p-10 min-h-[100svh] flex flex-col relative'>
+			<Header />
+
+			<div className='bg-muted/30 backdrop-blur-lg p-5 rounded-xl ring ring-muted'>
+				{todos.length !== 0 && <TodoList todos={todos} />}
+			</div>
+
+			<div className='inset-0 absolute bg-grid-pattern -z-10'></div>
 		</div>
 	);
 }

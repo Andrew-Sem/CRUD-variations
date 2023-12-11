@@ -3,13 +3,14 @@ import { TodoType } from './types/Todo';
 import { TodoList } from './components/todo-list';
 import { Header } from './components/header';
 import { useEffect, useState } from 'react';
+import { $api } from './http/api';
 
 function App() {
 	const [todos, setTodos] = useState<TodoType[]>([]);
 
 	useEffect(() => {
 		const getTodos = async () => {
-			const res = await axios.get<TodoType[]>('http://localhost:8080/todos');
+			const res = await $api.get<TodoType[]>('/todos');
 			setTodos(res.data);
 		};
 		getTodos();

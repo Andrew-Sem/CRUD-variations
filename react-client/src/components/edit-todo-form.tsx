@@ -58,7 +58,11 @@ export const EditTodoForm = ({
 						<FormItem>
 							<FormLabel>Description</FormLabel>
 							<FormControl>
-								<Textarea placeholder='Type description here' {...field} />
+								<Textarea
+									placeholder='Type description here'
+									{...field}
+									className='max-h-56'
+								/>
 							</FormControl>
 							<FormMessage />
 						</FormItem>

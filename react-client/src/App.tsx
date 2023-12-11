@@ -1,4 +1,3 @@
-import axios from 'axios';
 import { TodoType } from './types/Todo';
 import { TodoList } from './components/todo-list';
 import { Header } from './components/header';

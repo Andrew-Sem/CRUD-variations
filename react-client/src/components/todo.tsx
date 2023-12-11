@@ -63,7 +63,7 @@ export const Todo = ({ todo }: { todo: TodoType }) => {
 								<Button variant={'secondary'}>Cancel</Button>
 							</DialogClose>
 							<DialogClose>
-								<Button>Delete todo</Button>
+								<Button variant={'destructive'}>Delete todo</Button>
 							</DialogClose>
 						</DialogFooter>
 					</DialogContent>

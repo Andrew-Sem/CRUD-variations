@@ -3,6 +3,7 @@ import { TodoList } from './components/todo-list';
 import { Header } from './components/header';
 import { useEffect, useState } from 'react';
 import { $api } from './http/api';
+import { TodoForm } from './components/todo-form';
 
 function App() {
 	const [todos, setTodos] = useState<TodoType[]>([]);
@@ -18,8 +19,8 @@ function App() {
 	return (
 		<div className='p-10 min-h-[100svh] flex flex-col relative'>
 			<Header />
-
 			<div className='bg-muted/30 backdrop-blur-lg p-5 rounded-xl ring ring-muted'>
+				<TodoForm />
 				{todos.length !== 0 && <TodoList todos={todos} />}
 			</div>
 

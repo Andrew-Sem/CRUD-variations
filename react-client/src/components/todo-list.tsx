@@ -11,7 +11,7 @@ import {
 
 export const TodoList = ({ todos }: { todos: TodoType[] }) => {
 	return (
-		<Table className='rounded-md overflow-hidden'>
+		<Table className='rounded-md overflow-hidden mt-8'>
 			<TableHeader>
 				<TableRow>
 					<TableHead>Title</TableHead>

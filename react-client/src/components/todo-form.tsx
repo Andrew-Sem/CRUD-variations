@@ -13,18 +13,34 @@ import {
 import { Input } from './ui/input';
 import { Textarea } from './ui/textarea';
 import { Button } from './ui/button';
+import { TodoService } from '@/services/todo-service';
+import { QueryClient, useMutation, useQueryClient } from '@tanstack/react-query';
 
 export const TodoForm = () => {
+	const queryClient = useQueryClient();
+
+	const { mutate: addTodo } = useMutation({
+		mutationKey: ['todos'],
+		mutationFn: TodoService.addTodo,
+		onSuccess: () => {
+			queryClient.refetchQueries({ queryKey: ['get', 'todos'] });
+		},
+	});
 	const form = useForm<z.infer<typeof todoFormSchema>>({
 		resolver: zodResolver(todoFormSchema),
+		defaultValues: {
+			title: '',
+			description: '',
+		},
 	});
-	const onSubmit = (values: z.infer<typeof todoFormSchema>) => {
-		console.log(values);
+	const onTodoSubmit = (values: z.infer<typeof todoFormSchema>) => {
+		addTodo(values);
+		form.reset();
 	};
 
 	return (
 		<Form {...form}>
-			<form onSubmit={form.handleSubmit(onSubmit)} className='space-y-3'>
+			<form onSubmit={form.handleSubmit(onTodoSubmit)} className='space-y-8'>
 				<FormField
 					control={form.control}
 					name='title'
@@ -47,15 +63,15 @@ export const TodoForm = () => {
 							<FormControl>
 								<Textarea
 									placeholder='Type description here'
-									{...field}
 									className='max-h-56'
+									{...field}
 								/>
 							</FormControl>
 							<FormMessage />
 						</FormItem>
 					)}
 				/>
-				<div className='flex space-x-4 justify-end mt-4'>
+				<div className='flex justify-end mt-4'>
 					<Button type='submit'>Add todo</Button>
 				</div>
 			</form>

@@ -1,10 +1,12 @@
 package main
 
 import (
-	"github.com/gin-gonic/gin"
 	"net/http"
 	"time"
-    "github.com/gin-contrib/cors"
+
+	"github.com/gin-contrib/cors"
+	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 )
 
 type todo struct {
@@ -28,6 +30,8 @@ func createTodo(c *gin.Context) {
 	if err := c.BindJSON(&newTodo); err != nil {
 		return
 	}
+	randomID := uuid.New()
+	newTodo.ID = randomID.String()
 	todos = append(todos, newTodo)
 	c.IndentedJSON(http.StatusCreated, newTodo)
 }
@@ -39,16 +43,17 @@ func updateTodo(c *gin.Context) {
 func main() {
 	r := gin.Default()
     r.Use(cors.New(cors.Config{
-            AllowOrigins:     []string{"https://foo.com"},
-            AllowMethods:     []string{"PUT", "PATCH"},
-            AllowHeaders:     []string{"Origin"},
-            ExposeHeaders:    []string{"Content-Length"},
-            AllowCredentials: true,
-            AllowOriginFunc: func(origin string) bool {
-                return origin == "http://localhost:5173"
-            },
-            MaxAge: 12 * time.Hour,
-        }))
+		AllowOrigins:     []string{"http://localhost:5173"},
+		AllowMethods:     []string{"PUT", "PATCH"},
+		AllowHeaders:     []string{"Origin", "Content-Type"}, // Include Content-Type
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: true,
+		AllowOriginFunc: func(origin string) bool {
+			return origin == "http://localhost:5173"
+		},
+		MaxAge: 12 * time.Hour,
+	}))
+	
 	r.GET("/todos", getTodos)
 	r.POST("/todos", createTodo)
 

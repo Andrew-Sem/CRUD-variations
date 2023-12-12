@@ -41,31 +41,29 @@ func updateTodo(c *gin.Context) {
 }
 
 func deleteTodo(c *gin.Context) {
-	var request struct {
-		ID string `json:"id"`
-	}
-
-	if err := c.BindJSON(&request); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request body"})
-		return
-	}
-
+	id := c.Param("id")
+	// Find the index of the todo with the given ID
 	index := -1
+	var deletedTodo todo
 	for i, t := range todos {
-		if t.ID == request.ID {
+		if t.ID == id {
 			index = i
+			deletedTodo = t
 			break
 		}
 	}
 
+	// If the todo is not found, return a 404 Not Found response
 	if index == -1 {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Todo not found"})
 		return
 	}
 
+	// Remove the todo from the slice
 	todos = append(todos[:index], todos[index+1:]...)
 
-	c.Status(http.StatusNoContent)
+	// Return the deleted todo in the response
+	c.IndentedJSON(http.StatusOK, deletedTodo)
 }
 
 
@@ -85,7 +83,7 @@ func main() {
 	
 	r.GET("/todos", getTodos)
 	r.POST("/todos", createTodo)
-	r.DELETE("/todos", deleteTodo)
+	r.DELETE("/todos/:id", deleteTodo)
 
 	r.Run()
 }

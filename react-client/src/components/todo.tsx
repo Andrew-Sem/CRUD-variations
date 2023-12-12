@@ -72,10 +72,10 @@ export const Todo = ({ todo }: { todo: TodoType }) => {
 							</DialogDescription>
 						</DialogHeader>
 						<DialogFooter className='flex space-x-3 justify-end'>
-							<DialogClose>
+							<DialogClose asChild>
 								<Button variant={'secondary'}>Cancel</Button>
 							</DialogClose>
-							<DialogClose>
+							<DialogClose asChild>
 								<Button variant={'destructive'} onClick={deleteTodoHandler}>
 									Delete todo
 								</Button>

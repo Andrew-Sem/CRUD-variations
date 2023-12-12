@@ -40,11 +40,40 @@ func updateTodo(c *gin.Context) {
 
 }
 
+func deleteTodo(c *gin.Context) {
+	var request struct {
+		ID string `json:"id"`
+	}
+
+	if err := c.BindJSON(&request); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request body"})
+		return
+	}
+
+	index := -1
+	for i, t := range todos {
+		if t.ID == request.ID {
+			index = i
+			break
+		}
+	}
+
+	if index == -1 {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Todo not found"})
+		return
+	}
+
+	todos = append(todos[:index], todos[index+1:]...)
+
+	c.Status(http.StatusNoContent)
+}
+
+
 func main() {
 	r := gin.Default()
     r.Use(cors.New(cors.Config{
 		AllowOrigins:     []string{"http://localhost:5173"},
-		AllowMethods:     []string{"PUT", "PATCH"},
+		AllowMethods:     []string{"PUT", "PATCH", "DELETE"},
 		AllowHeaders:     []string{"Origin", "Content-Type"}, // Include Content-Type
 		ExposeHeaders:    []string{"Content-Length"},
 		AllowCredentials: true,
@@ -56,6 +85,7 @@ func main() {
 	
 	r.GET("/todos", getTodos)
 	r.POST("/todos", createTodo)
+	r.DELETE("/todos", deleteTodo)
 
 	r.Run()
 }

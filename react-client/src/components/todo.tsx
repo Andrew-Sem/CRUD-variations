@@ -14,9 +14,22 @@ import { Button } from './ui/button';
 import { EditTodoForm } from './edit-todo-form';
 import { useState } from 'react';
 import { DialogClose } from '@radix-ui/react-dialog';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { TodoService } from '@/services/todo-service';
 
 export const Todo = ({ todo }: { todo: TodoType }) => {
 	const [openEditDialog, setOpenEditDialog] = useState(false);
+	const { mutate: deleteTodo } = useMutation({
+		mutationKey: ['delete', 'todo', todo.id],
+		mutationFn: TodoService.deleteTodo,
+		onSuccess: () => {
+			queryClient.refetchQueries({ queryKey: ['get', 'todos'] });
+		},
+	});
+	const queryClient = useQueryClient();
+	const deleteTodoHandler = () => {
+		deleteTodo({ id: todo.id });
+	};
 	return (
 		<TableRow className=' '>
 			<TableCell>{todo.title}</TableCell>
@@ -63,7 +76,9 @@ export const Todo = ({ todo }: { todo: TodoType }) => {
 								<Button variant={'secondary'}>Cancel</Button>
 							</DialogClose>
 							<DialogClose>
-								<Button variant={'destructive'}>Delete todo</Button>
+								<Button variant={'destructive'} onClick={deleteTodoHandler}>
+									Delete todo
+								</Button>
 							</DialogClose>
 						</DialogFooter>
 					</DialogContent>

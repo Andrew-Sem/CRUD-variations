@@ -16,4 +16,8 @@ export class TodoService {
 	}): Promise<AxiosResponse<TodoType>> {
 		return $api.post<TodoType>('/todos', { title, description });
 	}
+
+	public static deleteTodo({ id }: { id: string }): Promise<AxiosResponse<TodoType>> {
+		return $api.delete<TodoType>('/todos/' + id);
+	}
 }

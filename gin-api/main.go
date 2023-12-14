@@ -42,7 +42,6 @@ func updateTodo(c *gin.Context) {
 
 func deleteTodo(c *gin.Context) {
 	id := c.Param("id")
-	// Find the index of the todo with the given ID
 	index := -1
 	var deletedTodo todo
 	for i, t := range todos {
@@ -53,16 +52,13 @@ func deleteTodo(c *gin.Context) {
 		}
 	}
 
-	// If the todo is not found, return a 404 Not Found response
 	if index == -1 {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Todo not found"})
 		return
 	}
 
-	// Remove the todo from the slice
 	todos = append(todos[:index], todos[index+1:]...)
 
-	// Return the deleted todo in the response
 	c.IndentedJSON(http.StatusOK, deletedTodo)
 }
 

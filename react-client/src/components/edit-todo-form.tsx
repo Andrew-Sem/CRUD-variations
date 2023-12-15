@@ -17,6 +17,7 @@ import { Textarea } from './ui/textarea';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { TodoType } from '@/types/Todo';
 import { TodoService } from '@/services/todo-service';
+import { useToast } from '@/components/ui/use-toast';
 
 export const EditTodoForm = ({
 	closeDialog,
@@ -26,11 +27,16 @@ export const EditTodoForm = ({
 	todo: TodoType;
 }) => {
 	const queryClient = useQueryClient();
+	const { toast } = useToast();
 	const { mutate: updateTodo } = useMutation({
 		mutationKey: ['update', 'todos', todo.id],
 		mutationFn: TodoService.updateTodo,
 		onSuccess: () => {
 			queryClient.refetchQueries({ queryKey: ['get', 'todos'] });
+			toast({
+				title: 'Successfully updated todo',
+				description: 'Btw you cant undo this',
+			});
 		},
 	});
 	const form = useForm<z.infer<typeof todoFormSchema>>({

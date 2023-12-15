@@ -14,25 +14,34 @@ import { Input } from '@/components/ui/input';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Textarea } from './ui/textarea';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { TodoType } from '@/types/Todo';
+import { TodoService } from '@/services/todo-service';
 
 export const EditTodoForm = ({
 	closeDialog,
-	defaultTitle,
-	defaultDescription,
+	todo,
 }: {
 	closeDialog: () => void;
-	defaultTitle: string;
-	defaultDescription: string;
+	todo: TodoType;
 }) => {
+	const queryClient = useQueryClient();
+	const { mutate: updateTodo } = useMutation({
+		mutationKey: ['update', 'todos', todo.id],
+		mutationFn: TodoService.updateTodo,
+		onSuccess: () => {
+			queryClient.refetchQueries({ queryKey: ['get', 'todos'] });
+		},
+	});
 	const form = useForm<z.infer<typeof todoFormSchema>>({
 		resolver: zodResolver(todoFormSchema),
 		defaultValues: {
-			title: defaultTitle,
-			description: defaultDescription,
+			title: todo.title,
+			description: todo.description,
 		},
 	});
 	const onSubmit = (values: z.infer<typeof todoFormSchema>) => {
-		console.log(values);
+		updateTodo({ id: todo.id, ...values });
 		closeDialog();
 	};
 	return (

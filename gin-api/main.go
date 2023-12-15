@@ -37,8 +37,37 @@ func createTodo(c *gin.Context) {
 }
 
 func updateTodo(c *gin.Context) {
+	id := c.Param("id")
 
+	// Find the index of the todo with the given ID
+	index := -1
+	for i, t := range todos {
+		if t.ID == id {
+			index = i
+			break
+		}
+	}
+
+	// If the todo is not found, return an error
+	if index == -1 {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Todo not found"})
+		return
+	}
+
+	// Bind the updated todo data from the request
+	var updatedTodo todo
+	if err := c.BindJSON(&updatedTodo); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request"})
+		return
+	}
+
+	// Update the todo fields
+	todos[index].Title = updatedTodo.Title
+	todos[index].Description = updatedTodo.Description
+
+	c.IndentedJSON(http.StatusOK, todos[index])
 }
+
 
 func deleteTodo(c *gin.Context) {
 	id := c.Param("id")
@@ -80,6 +109,7 @@ func main() {
 	r.GET("/todos", getTodos)
 	r.POST("/todos", createTodo)
 	r.DELETE("/todos/:id", deleteTodo)
+	r.PUT("/todos/:id", updateTodo)
 
 	r.Run()
 }

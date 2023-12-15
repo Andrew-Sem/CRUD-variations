@@ -48,11 +48,7 @@ export const Todo = ({ todo }: { todo: TodoType }) => {
 								Make changes to your todo here. Click save when you're done.
 							</DialogDescription>
 						</DialogHeader>
-						<EditTodoForm
-							closeDialog={() => setOpenEditDialog(false)}
-							defaultTitle={todo.title}
-							defaultDescription={todo.description}
-						/>
+						<EditTodoForm closeDialog={() => setOpenEditDialog(false)} todo={todo} />
 					</DialogContent>
 				</Dialog>
 			</TableCell>

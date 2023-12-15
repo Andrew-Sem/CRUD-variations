@@ -20,4 +20,8 @@ export class TodoService {
 	public static deleteTodo({ id }: { id: string }): Promise<AxiosResponse<TodoType>> {
 		return $api.delete<TodoType>('/todos/' + id);
 	}
+
+	public static updateTodo(todo: TodoType): Promise<AxiosResponse<TodoType>> {
+		return $api.put<TodoType>('/todos/' + todo.id, todo);
+	}
 }
